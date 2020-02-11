@@ -1,0 +1,22 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "API's developed using nodejs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deepankar96/node-api.git"
+  },
+  "author": "deepankar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/deepankar96/node-api/issues"
+  },
+  "homepage": "https://github.com/deepankar96/node-api#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
