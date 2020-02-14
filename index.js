@@ -20,21 +20,26 @@ var mysqlConnection = mysql.createConnection({
     console.log('Connection Failed!'+ JSON.stringify(err,undefined,2));
     });
 
-    //Create Data in the database
-    app.get('/add/:email/:pass/:username',(req,res)=>{
-      var sql = 'INSERT into user (email,password,username) values ?';
-      var value = [req.params.email,req.params.pass,req.params.username];
-      mysqlConnection.query(sql,[value], (err,rows) => {
-      if(err) throw err;
-      res.send(result.affectedRows);
-    });}
-  );
+  app.use((req,res,next)=>{
+    res.setHeader(
+        "Access-Control-Allow-Origin","*"
+    );
+    res.setHeader(
+      "Access-Control-Allow-Header",
+        "Origin,X-Requested-With,Content-Type,Accept"
+    );
+    res.setHeader(
+      "Access-Control-Allow-Methods",
+        "GET,POST,PATCH,DELETE,OPTIONS"
+    );
+    next();
+  })
+
 
     //Recieve Data from the database
-    app.get('/:id',(req,res)=>{
-      var userId = req.params.id;
-      var sql = 'SELECT * FROM user WHERE Id= ?';
-        mysqlConnection.query(sql,[userId], (err,rows) => {
+    app.get('/posts',(req,res)=>{
+      var sql = 'SELECT * FROM user';
+        mysqlConnection.query(sql, (err,rows) => {
         if(err) throw err;
         res.send(rows);
       });
