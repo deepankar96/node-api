@@ -1,9 +1,11 @@
 const mysql = require('mysql');
 const express = require('express')
 const bodyparser = require('body-parser');
+
 const app = express()
  
 app.use(bodyparser.json());
+app.use(bodyparser.urlencoded({extended:false}));
 
 var mysqlConnection = mysql.createConnection({
   host: 'localhost',
@@ -45,6 +47,10 @@ var mysqlConnection = mysql.createConnection({
       });
       }
     );
+    app.get('/test',(req,res)=> {
+      const email = req.body;
+      console.log(email);
+    });
 
 const port = process.env.PORT || 3000;
 app.listen(port,()=>{
