@@ -27,7 +27,7 @@ var mysqlConnection = mysql.createConnection({
         "Access-Control-Allow-Origin","*"
     );
     res.setHeader(
-      "Access-Control-Allow-Header",
+      "Access-Control-Allow-Headers",
         "Origin,X-Requested-With,Content-Type,Accept"
     );
     res.setHeader(
@@ -36,23 +36,51 @@ var mysqlConnection = mysql.createConnection({
     );
     next();
   })
-
+    
+  employee = [];
 
     //Recieve Data from the database
     app.get('/posts',(req,res)=>{
       var sql = 'SELECT * FROM user';
         mysqlConnection.query(sql, (err,rows) => {
         if(err) throw err;
-        res.send(rows);
+        for(row of rows){
+          const emp ={
+            id:row.Id,
+            email:row.email,
+            username:row.username,
+          }
+        employee.push(emp);
+        }
+      res.status(200).json({
+        message:"Successfull",
+        post:employee
+      }
+      );
+      employee=[];
       });
       }
     );
-    app.get('/test',(req,res)=> {
-      const email = req.body;
-      console.log(email);
-    });
+
+//Send data to the database
+app.post('/test',(req,res)=>{
+  const emp = req.body;
+  var data = []
+  data.push(emp.id.toString())
+  data.push(emp.email.toString())
+  data.push(emp.username.toString())
+  var sql = "INSERT INTO user (id, email, username) VALUES (?)";
+  mysqlConnection.query(sql, [data], function (err, result) {
+    if (err) throw err;
+    res.status(201).json({
+      message:"success"
+    });  
+  });
+  
+});
 
 const port = process.env.PORT || 3000;
 app.listen(port,()=>{
     console.log(`Listening on port ${port}..`);
 })
+
