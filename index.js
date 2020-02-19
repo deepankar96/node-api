@@ -61,6 +61,52 @@ var mysqlConnection = mysql.createConnection({
       });
       }
     );
+//Get department info all
+app.get('/department',(req,res)=>{
+  department=[];
+  var sql = 'SELECT * FROM `department-table`';
+        mysqlConnection.query(sql, (err,rows) => {
+        if(err) throw err;
+        for(row of rows){
+          const dept ={
+            id:row.id,
+            collegeid:row.collegeId,
+            departmentid:row.departmentId,
+            departmentname:row.departmentName,
+          }
+        department.push(dept);
+        }
+      res.status(200).json({
+        message:"Successfull",
+        post:department
+      }
+      );
+      });
+});
+
+//Get course info all
+app.get('/courses',(req,res)=>{
+  courses=[];
+  var sql = 'SELECT * FROM `course-table`';
+        mysqlConnection.query(sql, (err,rows) => {
+        if(err) throw err;
+        for(row of rows){
+          const course ={
+            id:row.id,
+            courseid:row.courseid,
+            collegeid:row.collegeid,
+            departmentid:row.departmentid,
+            coursename:row.coursename,
+          }
+        courses.push(course);
+        }
+      res.status(200).json({
+        message:"Successfull",
+        post:courses
+      }
+      );
+      });
+});
 
 //Send data to the database
 app.post('/test',(req,res)=>{
