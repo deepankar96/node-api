@@ -61,8 +61,9 @@ var mysqlConnection = mysql.createConnection({
       });
       }
     );
+
 //Get department info all
-app.get('/department',(req,res)=>{
+app.get('/api/department',(req,res)=>{
   department=[];
   var sql = 'SELECT * FROM `department-table`';
         mysqlConnection.query(sql, (err,rows) => {
@@ -85,7 +86,7 @@ app.get('/department',(req,res)=>{
 });
 
 //Get course info all
-app.get('/courses',(req,res)=>{
+app.get('/api/courses',(req,res)=>{
   courses=[];
   var sql = 'SELECT * FROM `course-table`';
         mysqlConnection.query(sql, (err,rows) => {
@@ -106,6 +107,24 @@ app.get('/courses',(req,res)=>{
       }
       );
       });
+});
+
+//Send data to the database
+app.post('/api/adddept',(req,res)=>{
+  const dept = req.body;
+  var data = []
+  data.push(dept.id.toString())
+  data.push(dept.collegeid.toString())
+  data.push(dept.departmentid.toString())
+  data.push(dept.departmentname.toString())
+  var sql = "INSERT INTO `department-table` (id,collegeId,departmentId,departmentName) VALUES (?)";
+  mysqlConnection.query(sql, [data], function (err, result) {
+    if (err) throw err;
+    res.status(201).json({
+      message:"success"
+    });  
+  });
+  
 });
 
 //Send data to the database
