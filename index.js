@@ -39,28 +39,6 @@ var mysqlConnection = mysql.createConnection({
     
   employee = [];
 
-    //Recieve Data from the database
-    app.get('/posts',(req,res)=>{
-      var sql = 'SELECT * FROM user';
-        mysqlConnection.query(sql, (err,rows) => {
-        if(err) throw err;
-        for(row of rows){
-          const emp ={
-            id:row.Id,
-            email:row.email,
-            username:row.username,
-          }
-        employee.push(emp);
-        }
-      res.status(200).json({
-        message:"Successfull",
-        post:employee
-      }
-      );
-      employee=[];
-      });
-      }
-    );
 
 //Get department info all
 app.get('/api/department',(req,res)=>{
@@ -113,11 +91,14 @@ app.get('/api/courses',(req,res)=>{
 app.post('/api/adddept',(req,res)=>{
   const dept = req.body;
   var data = []
-  data.push(dept.id.toString())
+  //data.push(dept.id.toString())
   data.push(dept.collegeid.toString())
   data.push(dept.departmentid.toString())
   data.push(dept.departmentname.toString())
-  var sql = "INSERT INTO `department-table` (id,collegeId,departmentId,departmentName) VALUES (?)";
+  data.push(dept.hodid.toString())
+  data.push(dept.departmentemail.toString())
+  data.push(dept.departmentpassword.toString())
+  var sql = "INSERT INTO `department-table` (collegeId,departmentId,departmentName,hodId,departmentEmail,departmentPassword) VALUES (?)";
   mysqlConnection.query(sql, [data], function (err, result) {
     if (err) throw err;
     res.status(201).json({
