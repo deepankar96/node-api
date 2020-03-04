@@ -63,6 +63,31 @@ app.get('/api/department',(req,res)=>{
       });
 });
 
+//Get college info all
+app.get('/api/college',(req,res)=>{
+  college=[];
+  var sql = 'SELECT * FROM `college`';
+        mysqlConnection.query(sql, (err,rows) => {
+        if(err) throw err;
+        for(row of rows){
+          const dataVar ={
+            id:row.sl,
+            collegeName:row.collegename,
+            collegeId:row.collegeid,
+            collegePassword:row.collegepassword,
+            collegeLocation:row.collegelocation,
+            collegeAddress:row.collegeaddress,
+          }
+        college.push(dataVar);
+        }
+      res.status(200).json({
+        message:"Successfull",
+        post:college
+      }
+      );
+      });
+});
+
 //Get course info all
 app.get('/api/courses',(req,res)=>{
   courses=[];
