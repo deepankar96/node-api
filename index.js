@@ -151,13 +151,14 @@ app.post('/api/collegeLogin',(req,res,next)=>{
         {expiresIn:"1h"}
       );
       res.status(200).json({
-        message:collegeId,
-        token:token
+        message:"success",
+        token:token,
+        collegeId:collegeId
       });
     }
     else{
       res.status(201).json({
-        message:"Auth Failed",
+        message:"failed",
       });
     }
   });
