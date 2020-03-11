@@ -2,6 +2,7 @@ const mysql = require('mysql');
 const express = require('express')
 const bodyparser = require('body-parser');
 const jwt = require('jsonwebtoken');
+const collegeauth = require('./middleware/college-auth');
 
 const app = express()
  
@@ -29,7 +30,7 @@ var mysqlConnection = mysql.createConnection({
     );
     res.setHeader(
       "Access-Control-Allow-Headers",
-        "Origin,X-Requested-With,Content-Type,Accept"
+        "Origin,X-Requested-With,Content-Type,Accept,collegeauthorization"
     );
     res.setHeader(
       "Access-Control-Allow-Methods",
@@ -38,14 +39,14 @@ var mysqlConnection = mysql.createConnection({
     next();
   })
     
-  employee = [];
 
 
 //Get department info all
-app.get('/api/department',(req,res)=>{
+app.post('/api/department',collegeauth,(req,res)=>{
+  collegeId = req.body.collegeId;
   department=[];
-  var sql = 'SELECT * FROM `department-table`';
-        mysqlConnection.query(sql, (err,rows) => {
+  var sql = 'SELECT * FROM `department-table` where collegeId = ?';
+        mysqlConnection.query(sql, [collegeId], (err,rows) => {
         if(err) throw err;
         for(row of rows){
           const dept ={
@@ -63,6 +64,27 @@ app.get('/api/department',(req,res)=>{
       );
       });
 });
+// app.get('/api/department',collegeauth,(req,res)=>{
+//   department=[];
+//   var sql = 'SELECT * FROM `department-table` where collegeId = ?';
+//         mysqlConnection.query(sql, (err,rows) => {
+//         if(err) throw err;
+//         for(row of rows){
+//           const dept ={
+//             id:row.id,
+//             collegeid:row.collegeId,
+//             departmentid:row.departmentId,
+//             departmentname:row.departmentName,
+//           }
+//         department.push(dept);
+//         }
+//       res.status(200).json({
+//         message:"Successfull",
+//         post:department
+//       }
+//       );
+//       });
+// });
 
 //Get college info all
 app.get('/api/college',(req,res)=>{
@@ -114,7 +136,7 @@ app.get('/api/courses',(req,res)=>{
 });
 
 //Send data to the database
-app.post('/api/adddept',(req,res)=>{
+app.post('/api/adddept',collegeauth,(req,res)=>{
   const dept = req.body;
   var data = []
   //data.push(dept.id.toString())
