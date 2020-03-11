@@ -1,6 +1,7 @@
 const mysql = require('mysql');
 const express = require('express')
 const bodyparser = require('body-parser');
+const jwt = require('jsonwebtoken');
 
 const app = express()
  
@@ -133,21 +134,33 @@ app.post('/api/adddept',(req,res)=>{
   
 });
 
-//Send data to the database
-app.post('/test',(req,res)=>{
-  const emp = req.body;
-  var data = []
-  data.push(emp.id.toString())
-  data.push(emp.email.toString())
-  data.push(emp.username.toString())
-  var sql = "INSERT INTO user (id, email, username) VALUES (?)";
-  mysqlConnection.query(sql, [data], function (err, result) {
+//Login to a college using a json web token
+app.post('/api/collegeLogin',(req,res,next)=>{
+  collegeId = req.body.collegeId;
+  collegePassword = req.body.password;
+  var sql = 'SELECT `collegepassword` FROM `college` WHERE `collegeid` = ?';
+  mysqlConnection.query(sql, [collegeId], function (err, rows) {
     if (err) throw err;
-    res.status(201).json({
-      message:"success"
-    });  
+    for(row of rows){
+      password = row.collegepassword
+    }
+    if(password === collegePassword){
+      const token = jwt.sign(
+        {collegeId:collegeId},
+        "secret_string_for_college_login",
+        {expiresIn:"1h"}
+      );
+      res.status(200).json({
+        message:collegeId,
+        token:token
+      });
+    }
+    else{
+      res.status(201).json({
+        message:"Auth Failed",
+      });
+    }
   });
-  
 });
 
 const port = process.env.PORT || 3000;
