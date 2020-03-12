@@ -64,27 +64,7 @@ app.post('/api/department',collegeauth,(req,res)=>{
       );
       });
 });
-// app.get('/api/department',collegeauth,(req,res)=>{
-//   department=[];
-//   var sql = 'SELECT * FROM `department-table` where collegeId = ?';
-//         mysqlConnection.query(sql, (err,rows) => {
-//         if(err) throw err;
-//         for(row of rows){
-//           const dept ={
-//             id:row.id,
-//             collegeid:row.collegeId,
-//             departmentid:row.departmentId,
-//             departmentname:row.departmentName,
-//           }
-//         department.push(dept);
-//         }
-//       res.status(200).json({
-//         message:"Successfull",
-//         post:department
-//       }
-//       );
-//       });
-// });
+
 
 //Get college info all
 app.get('/api/college',(req,res)=>{
@@ -185,6 +165,31 @@ app.post('/api/collegeLogin',(req,res,next)=>{
     }
   });
 });
+
+app.post('/api/addCollege',(req,res,next)=>{
+  const college = req.body
+  var data = []
+  data.push(college.collegeId)
+  data.push(college.collegeName)
+  data.push(college.collegeCity)
+  data.push(college.collegeState)
+  data.push(college.collegeAddress)
+  data.push(college.collegeLocationLat)
+  data.push(college.collegeLocationLong)
+  data.push(college.collegeType)
+  data.push(college.collegeAffiliatedTo)
+  data.push(college.collegeEstablishment)
+  data.push(college.collegeEmail)
+  data.push(college.collegePassword)
+  var sql = "INSERT INTO `college` (collegeid,collegename,collegecity,collegestate,collegeaddress,collegelocationLat,collegelocationLong,collegetype,collegeaffiliatedto,yearofestablishment,collegeemail,collegepassword) VALUES (?)";
+  mysqlConnection.query(sql, [data], function (err, result) {
+    if (err) throw err;
+    res.status(201).json({
+      message:"success"
+    });  
+  });
+});
+
 
 const port = process.env.PORT || 3000;
 app.listen(port,()=>{
