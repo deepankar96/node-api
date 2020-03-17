@@ -171,30 +171,31 @@ app.post('/api/departmentLogin',(req,res,next)=>{
   collegeId = req.body.collegeId;
   departmentId = req.body.departmentId;
   departmentPassword = req.body.password;
-  // var sql = 'SELECT `collegepassword` FROM `college` WHERE `collegeid` = ?';
-  // mysqlConnection.query(sql, [collegeId], function (err, rows) {
-  //   if (err) throw err;
-  //   for(row of rows){
-  //     password = row.collegepassword
-  //   }
-  //   if(password === collegePassword){
-  //     const token = jwt.sign(
-  //       {collegeId:collegeId},
-  //       "secret_string_for_college_login",
-  //       {expiresIn:"10h"}
-  //     );
-  //     res.status(200).json({
-  //       message:"success",
-  //       token:token,
-  //       collegeId:collegeId
-  //     });
-  //   }
-  //   else{
-  //     res.status(201).json({
-  //       message:"failed",
-  //     });
-  //   }
-  // });
+  var sql = 'SELECT `departmentPassword` FROM `department-table` WHERE `collegeid` = ? AND `departmentId` = ?';
+  mysqlConnection.query(sql, [collegeId,departmentId], function (err, rows) {
+    if (err) throw err;
+    for(row of rows){
+      password = row.departmentPassword
+    }
+    if(password === departmentPassword){
+      const token = jwt.sign(
+        {collegeId:collegeId,departmentId:departmentId},
+        "secret_string_for_department_login",
+        {expiresIn:"10h"}
+      );
+      res.status(200).json({
+        message:"success",
+        token:token,
+        collegeId:collegeId,
+        departmentId:departmentId
+      });
+    }
+    else{
+      res.status(201).json({
+        message:"failed",
+      });
+    }
+  });
 });
 
 app.post('/api/addCollege',(req,res,next)=>{
