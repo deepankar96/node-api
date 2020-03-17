@@ -150,7 +150,7 @@ app.post('/api/collegeLogin',(req,res,next)=>{
       const token = jwt.sign(
         {collegeId:collegeId},
         "secret_string_for_college_login",
-        {expiresIn:"1h"}
+        {expiresIn:"10h"}
       );
       res.status(200).json({
         message:"success",
