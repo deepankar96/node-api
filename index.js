@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const collegeauth = require('./middleware/college-auth');
 
 const app = express()
- 
+ //
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({extended:false}));
 
