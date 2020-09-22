@@ -3,7 +3,7 @@ const express = require('express')
 const bodyparser = require('body-parser');
 const jwt = require('jsonwebtoken');
 const collegeauth = require('./middleware/college-auth');
-
+//
 const app = express()
  
 app.use(bodyparser.json());
